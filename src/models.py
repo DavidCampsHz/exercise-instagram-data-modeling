@@ -8,23 +8,63 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class Users(Base):
+    __tablename__ = 'users'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    username = Column(String(250), nullable=False)
+    password = Column(String(250), nullable=False)
+    first_name = Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
+    birth_date = Column(String(250), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"))
+    user_post = relationship("posts", backref = "Users")
 
-class Address(Base):
-    __tablename__ = 'address'
+class Posts(Base):
+    __tablename__ = 'posts'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    post_name = Column(String(250))
+    location_id = Column(Integer, ForeignKey("locations.id"))
+    post_location = relationship("locations", backref = "Posts")
+    category_id = Column(Integer, ForeignKey("categories.id"))
+    post_category = relationship("categories", backref = "Posts")
+    hashtag_id = Column(Integer, ForeignKey('hashtags.id'))
+    post_hashtag = relationship("hashtags", backref = "Posts")
+    collection_id = Column(Integer, ForeignKey('collections.id'))
+    post_collection = relationship("collections", backref = "Posts")
+
+class Locations(Base):
+    __tablename__ = 'locations'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    location_name = Column(String(250))
+
+class Categories(Base):
+    __tablename__ = 'categories'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    category_name = Column(String(250))
+
+class Hashtags(Base):
+    __tablename__ = 'hashtags'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    hashtag_name = Column(String(250))
+
+class Collections(Base):
+    __tablename__ = 'collections'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    category_name = Column(String(250))
+    post_id = Column(Integer, ForeignKey("posts.id"))
+    user_post = relationship(Posts)
 
     def to_dict(self):
         return {}
